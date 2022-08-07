@@ -31,14 +31,23 @@ public class IPController {
     public IPController(GetAddressFromIpService getAddressFromIpService) {
         this.getAddressFromIpService = getAddressFromIpService;
     }
+    @ApiOperation(value = "获取IP信息", notes = "获取IP信息")
+    @GetMapping("/getIp.do")
+    public ResultObj getIp(HttpServletRequest request) {
+        try {
+            return ResultObj.success(IPUtils.getIPAddress(request));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultObj.error("获取IP地址信息失败");
+        }
+    }
 
-
-    @ApiOperation(value = "获取IP地址信息", notes = "获取IP地址信息")
+    @ApiOperation(value = "根据IP获取地址信息", notes = "根据IP获取地址信息")
     @GetMapping("/getIpInfo.do")
     public ResultObj getIpInfo(HttpServletRequest request) {
         try {
             String ip = IPUtils.getIPAddress(request);
-            return ResultObj.success(getAddressFromIpService.getAddressFromIp(ip));
+            return getAddressFromIpService.getAddressFromIp(ip);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultObj.error("获取IP地址信息失败");

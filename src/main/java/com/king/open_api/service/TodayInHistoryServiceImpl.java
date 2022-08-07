@@ -78,7 +78,6 @@ public class TodayInHistoryServiceImpl {
                 todayInHistory.setFestival(elementJO.get("festival").toString());
                 todayInHistory.setLink(elementJO.get("link").toString());
                 todayInHistory.setDesc(HttpUtils.delHTMLTag(elementJO.get("desc").toString()));
-                logger.info("历史上的今天信息：{}", todayInHistory);
                 todayInHistoryList.add(todayInHistory);
             }
             return ResultObj.success(todayInHistoryList);

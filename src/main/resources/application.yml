@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: open-api
+
+
+logging:
+  level:
+    root: warn
+    com.king: info
+    org.springframework: warn

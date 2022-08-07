@@ -1,8 +1,10 @@
 package com.king.open_api.controller;
 
 import com.king.open_api.service.GetHotNewsServiceImpl;
+import com.king.open_api.util.StringUtils;
 import com.king.open_api.vo.ResultObj;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,9 +53,14 @@ public class GetHotNewsController {
     }
 
     @ApiOperation(value = "获取热搜组合版", notes = "获取热搜组合版")
+    @ApiImplicitParam(name = "size", value = "获取热搜的数量", required = true, dataType = "int", paramType = "query")
     @GetMapping("/getHotNews.do")
+
     public ResultObj getHotNews(Integer size) {
         try {
+            if (StringUtils.isEmpty(size)) {
+                return ResultObj.error("请输入获取热搜的数量");
+            }
             return ResultObj.success(getHotNewsService.grabHotNews2(size));
         } catch (Exception e) {
             e.printStackTrace();

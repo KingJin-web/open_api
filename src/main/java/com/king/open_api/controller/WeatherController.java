@@ -38,7 +38,7 @@ public class WeatherController {
     public ResultObj getWeather(HttpServletRequest request) {
         try {
             String ip = IPUtils.getIPAddress(request);
-            String city = getAddressFromIpService.getAddressFromIp(ip).getCity();
+            String city = getAddressFromIpService.getIPEntryCNFromIp(ip).getCity();
             return ResultObj.success( weatherService.getWeather(city));
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +53,7 @@ public class WeatherController {
     public ResultObj getWeatherToDay(HttpServletRequest request) {
         try {
             String ip = IPUtils.getIPAddress(request);
-            String city = getAddressFromIpService.getAddressFromIp(ip).getCity();
+            String city = getAddressFromIpService.getIPEntryCNFromIp(ip).getCity();
             return ResultObj.success(weatherService.getTodayWeather(city));
         } catch (Exception e) {
             e.printStackTrace();

@@ -27,34 +27,36 @@ public class IPEntryCN {
 //        "as": "AS56047 China Mobile communications corporation",
 //        "query": "120.227.93.113"
 
-    //状态
-    private String status;
-    //国家
+//   "area": "",
+//           "country": "中国",
+//           "isp_id": "100017",
+//           "queryIp": "113.240.245.242",
+//           "city": "长沙",
+//           "ip": "113.240.245.242",
+//           "isp": "电信",
+//           "county": "",
+//           "region_id": "430000",
+//           "area_id": "",
+//           "county_id": null,
+//           "region": "湖南",
+//           "country_id": "CN",
+//           "city_id": "430100"
+    private String area;
     private String country;
-    //国家编码
-    private String countryCode;
-    //省份
-    private String region;
-    //省份名称
-    private String regionName;
-    //城市
+    private String isp_id;
+    private String queryIp;
     private String city;
-    //邮编
-    private String zip;
-    //纬度
-    private String lat;
-    //经度
-    private String lon;
-    //时区
-    private String timezone;
-    //运营商
+    private String ip;
     private String isp;
-    //运营商名称
-    private String org;
-    //AS号
-    private String as;
-    //查询的IP
-    private String query;
+    private String county;
+    private String region_id;
+    private String area_id;
+    private String county_id;
+    private String region;
+    private String country_id;
+    private String city_id;
+    private String districts;
+
 
 
 }
