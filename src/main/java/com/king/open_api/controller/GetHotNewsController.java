@@ -55,7 +55,6 @@ public class GetHotNewsController {
     @ApiOperation(value = "获取热搜组合版", notes = "获取热搜组合版")
     @ApiImplicitParam(name = "size", value = "获取热搜的数量", required = true, dataType = "int", paramType = "query")
     @GetMapping("/getHotNews.do")
-
     public ResultObj getHotNews(Integer size) {
         try {
             if (StringUtils.isEmpty(size)) {

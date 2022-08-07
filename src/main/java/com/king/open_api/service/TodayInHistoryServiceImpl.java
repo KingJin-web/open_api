@@ -59,9 +59,19 @@ public class TodayInHistoryServiceImpl {
             if (ObjectUtils.isEmpty(date) || date.length() != 5) {
                 return ResultObj.error("日期格式不正确");
             }
-            String[] dateArray = date.split("-");
-            String month = dateArray[0];
-            String day = dateArray[1];
+            //判断输入的日期是否存在
+            String[] dateArray;
+            String month;
+            String day;
+            try {
+                dateArray = date.split("-");
+                month = dateArray[0];
+                day = dateArray[1];
+                LocalDate.of(LocalDate.now().getYear(), Integer.parseInt(month), Integer.parseInt(day));
+            } catch (Exception e) {
+                logger.error("输入的日期不正确");
+                return ResultObj.error("输入的日期不正确");
+            }
             // 时间戳
             long timestamp = System.currentTimeMillis();
             String url = "https://baike.baidu.com/cms/home/eventsOnHistory/" + month + ".json?_=" + timestamp;
@@ -82,7 +92,7 @@ public class TodayInHistoryServiceImpl {
             }
             return ResultObj.success(todayInHistoryList);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("获取历史上的今天信息失败", e);
             return ResultObj.error("获取历史上的今天信息失败");
         }
 
