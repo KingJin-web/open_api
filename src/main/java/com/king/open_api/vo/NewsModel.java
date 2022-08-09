@@ -2,7 +2,9 @@ package com.king.open_api.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author: King
@@ -12,6 +14,8 @@ import lombok.Data;
  */
 @Data
 @ApiModel(value = "新闻模板")
+@AllArgsConstructor
+@NoArgsConstructor
 public class NewsModel {
     //我只需要原新闻链接（url），新闻来源（出自哪篇新闻网站），新闻内容
     @ApiModelProperty(value = "新闻链接")
@@ -27,4 +31,8 @@ public class NewsModel {
     @ApiModelProperty(value = "新闻图片")
     private String img;
 
+
+    public NewsModel(String title) {
+        this.title = title;
+    }
 }

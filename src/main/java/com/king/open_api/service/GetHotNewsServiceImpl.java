@@ -2,7 +2,10 @@ package com.king.open_api.service;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.king.open_api.entity.WeiBoHot;
+import com.king.open_api.util.HttpUtils;
 import com.king.open_api.vo.NewsModel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -13,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: King
@@ -98,7 +103,7 @@ public class GetHotNewsServiceImpl {
 
     public String grabBaiduHotNews2() {
         String url = "https://top.baidu.com/board?tab=realtime&sa=fyb_realtime_31065";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         try {
             Document doc = Jsoup.connect(url).get();
             //标题
@@ -119,7 +124,7 @@ public class GetHotNewsServiceImpl {
         try {
             List<NewsModel> list1 = grabBaiduHotNews();
             List<NewsModel> list2 = grabWeiBoHotNews();
-
+            List<NewsModel> list3 = getDouYinHotNews();
             //60%的权重是百度，40%的权重是微博
             int l1 = size * 60 / 100;
             int l2 = size - l1;
@@ -143,5 +148,72 @@ public class GetHotNewsServiceImpl {
         }
         return null;
 
+    }
+
+    //获取抖音热搜
+    public List<NewsModel> getDouYinHotNews() {
+        try {
+            Map<String, String> map = new HashMap<>();
+            map.put("authority", "");
+            //:authority: mcs.zijieapi.com
+            //:method: POST
+            //:path: /list
+            //:scheme: https
+            //accept: */*
+            //accept-encoding: gzip, deflate, br
+            //accept-language: zh-CN,zh;q=0.9
+            //content-length: 1783
+
+            String s = HttpUtils.get("https://www.iesdouyin.com/web/api/v2/hotsearch/billboard/word/?reflow_source=reflow_page");
+
+            List<NewsModel> list = new ArrayList<>();
+            JSONArray jsonArray = JSON.parseObject(s).getJSONArray("word_list");
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                list.add(new NewsModel(jsonObject.getString("word")));
+            }
+
+            return list;
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return null;
+    }
+
+
+    public String getDouYinHotNews2() {
+        try {
+            String s = getDouYinHots();
+            StringBuilder sb = new StringBuilder();
+            JSONArray jsonArray = JSON.parseObject(s).getJSONArray("word_list");
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                sb.append(jsonObject.getString("word")).append("。");
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            logger.error("JSON解析失败", e);
+            return null;
+        }
+    }
+
+    public String getDouYinHots() {
+        try {
+            Map<String, String> map = new HashMap<>();
+            map.put("authority", "douyin.com");
+            map.put("referer", "https://www.iesdouyin.com/");
+            map.put("path", "/web/api/v2/hotsearch/billboard/word/");
+            map.put("scheme", "https");
+            map.put("method", "GET");
+            map.put("accept", "*/*");
+            map.put("accept-encoding", "gzip, deflate, br");
+            map.put("accept-language", "zh-CN,zh;q=0.9");
+            map.put("content-length", "1783");
+
+            return HttpUtils.getRandomUserAgent("https://www.iesdouyin.com/web/api/v2/hotsearch/billboard/word/?reflow_source=reflow_page", map);
+        } catch (Exception e) {
+            logger.error("获取抖音热搜失败", e);
+            return null;
+        }
     }
 }

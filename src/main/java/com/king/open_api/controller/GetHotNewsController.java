@@ -67,4 +67,15 @@ public class GetHotNewsController {
         }
     }
 
+    @ApiOperation(value = "获取抖音热搜", notes = "获取抖音热搜")
+    @GetMapping("/getDouYinHotNews.do")
+    public ResultObj getDouYinHotNews() {
+        try {
+            return ResultObj.success(getHotNewsService.getDouYinHotNews2());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultObj.error("获取抖音热搜失败");
+        }
+    }
+
 }
