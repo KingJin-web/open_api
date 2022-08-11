@@ -78,4 +78,15 @@ public class GetHotNewsController {
         }
     }
 
+    @ApiOperation(value = "获取热搜", notes = "获取热搜")
+    @GetMapping("/getAllHotNews.do")
+    public ResultObj getAllHotNews() {
+        try {
+            return ResultObj.success(getHotNewsService.grabHotNews3());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultObj.error("获取热搜失败");
+        }
+    }
+
 }

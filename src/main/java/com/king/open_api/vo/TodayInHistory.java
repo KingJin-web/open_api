@@ -18,6 +18,7 @@ public class TodayInHistory {
     private String year;
     @ApiModelProperty(value = "标题")
     private String title;
+    @ApiModelProperty(value = "节日")
     private String festival;
     @ApiModelProperty(value = "链接")
     private String link;

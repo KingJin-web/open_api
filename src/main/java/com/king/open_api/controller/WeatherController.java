@@ -41,7 +41,7 @@ public class WeatherController {
         try {
             String ip = IPUtils.getIPAddress(request);
             String city = getAddressFromIpService.getIPEntryCNFromIp(ip).getCity();
-            return ResultObj.success( weatherService.getWeather(city));
+            return ResultObj.success( weatherService.getWeatherByIp(city));
         } catch (Exception e) {
             e.printStackTrace();
             return ResultObj.error("获取天气信息失败");
@@ -68,10 +68,19 @@ public class WeatherController {
     @GetMapping("/getWeatherToDayByAddress.do")
     public ResultObj getWeatherToDayByAddress(String city) {
         try {
-            if (StringUtils.isEmpty(city)) {
-                return ResultObj.error("城市名称不能为空");
-            }
             return weatherService.getTodayWeather(city);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultObj.error("获取天气信息失败");
+        }
+
+    }
+
+    @ApiOperation(value = "获取天气信息通过地址", notes = "获取天气信息通过地址")
+    @GetMapping("/getWeatherByAddress.do")
+    public ResultObj getWeatherByAddress(String city) {
+        try {
+            return weatherService.getWeatherByAddress(city);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultObj.error("获取天气信息失败");

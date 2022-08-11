@@ -23,6 +23,7 @@ public class WeatherVo {
     private List<MoJiWeather.Weather> list;
 
     @Data
+    @ApiModel(value = "天气状况")
     public static class WeatherDataVo {
         @ApiModelProperty(value = "上次更新时间")
         private String lastUpdateTime;

@@ -7,6 +7,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.king.open_api.entity.WeiBoHot;
 import com.king.open_api.util.HttpUtils;
 import com.king.open_api.vo.NewsModel;
+import com.king.open_api.vo.ResultObj;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,10 +16,7 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: King
@@ -119,7 +117,6 @@ public class GetHotNewsServiceImpl {
         }
         return null;
     }
-
     public String grabHotNews2(Integer size) {
         try {
             List<NewsModel> list1 = grabBaiduHotNews();
@@ -143,6 +140,49 @@ public class GetHotNewsServiceImpl {
                 sb.append(list2.get(i).getTitle()).append("。");
             }
             return sb.toString();
+        } catch (Exception e) {
+            logger.error("抓取热点排行榜异常：", e);
+        }
+        return null;
+
+    }
+
+    public ResultObj grabHotNews3(Integer size) {
+        try {
+            List<NewsModel> list1 = grabBaiduHotNews();
+            List<NewsModel> list2 = grabWeiBoHotNews();
+            List<NewsModel> list3 = getDouYinHotNews();
+            //40%的权重是百度，30%的权重是微博 ,30%的权重是抖音
+            int l1 = size * 40 / 100;
+            int l2 = size * 30 / 100;
+            int l3 = size - l1 - l2;
+            Set<String> set = new HashSet<>();
+            if (list1.size() < l1) {
+                l1 = list1.size();
+                l2 = size - l1 - l2;
+            }
+            if (list2.size() < l2) {
+                l2 = list2.size();
+                l3 = size - l1 - l2;
+            }
+            if (list3.size() < l3) {
+                l3 = list3.size();
+            }
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < l1; i++) {
+                set.add(list1.get(i).getTitle());
+               // sb.append(list1.get(i).getTitle()).append("。");
+            }
+            for (int i = 0; i < l2; i++) {
+               set.add(list2.get(i).getTitle());
+            }
+            for (int i = 0; i < l3; i++) {
+                set.add(list3.get(i).getTitle());
+            }
+            for (String s : set) {
+                sb.append(s).append("。");
+            }
+            return ResultObj.success("",set.size(),sb.toString());
         } catch (Exception e) {
             logger.error("抓取热点排行榜异常：", e);
         }
@@ -184,6 +224,24 @@ public class GetHotNewsServiceImpl {
     public String getDouYinHotNews2() {
         try {
             String s = getDouYinHots();
+            logger.info(s);
+            StringBuilder sb = new StringBuilder();
+            JSONArray jsonArray = JSON.parseObject(s).getJSONArray("word_list");
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                sb.append(jsonObject.getString("word")).append("。");
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            logger.error("JSON解析失败", e);
+            return null;
+        }
+    }
+
+    public String getDouYinHotNews3() {
+        try {
+            String s = getDouYinHots();
+            logger.info(s);
             StringBuilder sb = new StringBuilder();
             JSONArray jsonArray = JSON.parseObject(s).getJSONArray("word_list");
             for (int i = 0; i < jsonArray.size(); i++) {
@@ -206,9 +264,9 @@ public class GetHotNewsServiceImpl {
             map.put("scheme", "https");
             map.put("method", "GET");
             map.put("accept", "*/*");
-            map.put("accept-encoding", "gzip, deflate, br");
-            map.put("accept-language", "zh-CN,zh;q=0.9");
-            map.put("content-length", "1783");
+//            map.put("accept-encoding", "gzip, deflate, br");
+//            map.put("accept-language", "zh-CN,zh;q=0.9");
+//            map.put("content-length", "1783");
 
             return HttpUtils.getRandomUserAgent("https://www.iesdouyin.com/web/api/v2/hotsearch/billboard/word/?reflow_source=reflow_page", map);
         } catch (Exception e) {
