@@ -6,6 +6,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.king.open_api.entity.WeiBoHot;
 import com.king.open_api.util.HttpUtils;
+import com.king.open_api.util.StringUtils;
 import com.king.open_api.vo.NewsModel;
 import com.king.open_api.vo.ResultObj;
 import org.jsoup.Jsoup;
@@ -117,6 +118,7 @@ public class GetHotNewsServiceImpl {
         }
         return null;
     }
+
     public String grabHotNews2(Integer size) {
         try {
             List<NewsModel> list1 = grabBaiduHotNews();
@@ -148,6 +150,9 @@ public class GetHotNewsServiceImpl {
     }
 
     public ResultObj grabHotNews3(Integer size) {
+        if (size <= 0 || StringUtils.isEmpty(size)) {
+            return ResultObj.error("参数错误");
+        }
         try {
             List<NewsModel> list1 = grabBaiduHotNews();
             List<NewsModel> list2 = grabWeiBoHotNews();
@@ -169,12 +174,13 @@ public class GetHotNewsServiceImpl {
                 l3 = list3.size();
             }
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < l1; i++) {
-                set.add(list1.get(i).getTitle());
-               // sb.append(list1.get(i).getTitle()).append("。");
+            int j = 0;
+            for (j = 0; j < l1; j++) {
+                set.add(list1.get(j).getTitle());
+                // sb.append(list1.get(i).getTitle()).append("。");
             }
             for (int i = 0; i < l2; i++) {
-               set.add(list2.get(i).getTitle());
+                set.add(list2.get(i).getTitle());
             }
             for (int i = 0; i < l3; i++) {
                 set.add(list3.get(i).getTitle());
@@ -182,11 +188,21 @@ public class GetHotNewsServiceImpl {
             for (String s : set) {
                 sb.append(s).append("。");
             }
-            return ResultObj.success("",set.size(),sb.toString());
+            if (set.size() < size) {
+                int n = size - set.size();
+                if ((list1.size() - l1) < n) {
+                    n = list1.size() - l1;
+                }
+                for (int i = 0; i < n; i++) {
+                    sb.append(list1.get(++j).getTitle()).append("。");
+                }
+            }
+            return ResultObj.success("获取热搜成功", set.size(), sb.toString());
         } catch (Exception e) {
             logger.error("抓取热点排行榜异常：", e);
+            return ResultObj.error("获取热搜失败");
         }
-        return null;
+
 
     }
 

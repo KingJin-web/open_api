@@ -41,7 +41,7 @@ public class WeatherController {
         try {
             String ip = IPUtils.getIPAddress(request);
             String city = getAddressFromIpService.getIPEntryCNFromIp(ip).getCity();
-            return ResultObj.success( weatherService.getWeatherByIp(city));
+            return weatherService.getWeatherByIp(city);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultObj.error("获取天气信息失败");
@@ -56,7 +56,7 @@ public class WeatherController {
         try {
             String ip = IPUtils.getIPAddress(request);
             String city = getAddressFromIpService.getIPEntryCNFromIp(ip).getCity();
-            return ResultObj.success(weatherService.getTodayWeather(city));
+            return weatherService.getTodayWeather(city);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultObj.error("获取天气信息失败");

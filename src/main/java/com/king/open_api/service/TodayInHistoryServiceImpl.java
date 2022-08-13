@@ -32,7 +32,7 @@ import java.util.*;
 @Service
 public class TodayInHistoryServiceImpl {
 
-    Logger logger = org.slf4j.LoggerFactory.getLogger(TodayInHistoryServiceImpl.class);
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(TodayInHistoryServiceImpl.class);
 
     //获取历史上的今天信息
     public ResultObj getTodayInHistory() {
@@ -42,7 +42,7 @@ public class TodayInHistoryServiceImpl {
             String day = localDate.getDayOfMonth() < 10 ? "0" + localDate.getDayOfMonth() : localDate.getDayOfMonth() + "";
             return getTodayInHistory(month + "-" + day);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("获取历史上的今天信息异常", e);
             return ResultObj.error("获取历史上的今天信息失败");
         }
     }

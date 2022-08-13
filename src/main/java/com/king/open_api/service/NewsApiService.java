@@ -47,7 +47,6 @@ public class NewsApiService {
         String s = getTencentNews();
         TencentNews tencentNews = JSON.parseObject(s, TencentNews.class);
         List<NewsModel> newsModels = tencentNews.toNewsModelList(size);
-        logger.info("获取到的新闻内容：{}", newsModels);
         return ResultObj.success(newsModels);
     }
 

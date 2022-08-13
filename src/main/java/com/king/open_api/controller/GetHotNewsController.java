@@ -80,9 +80,9 @@ public class GetHotNewsController {
 
     @ApiOperation(value = "获取热搜", notes = "获取热搜")
     @GetMapping("/getAllHotNews.do")
-    public ResultObj getAllHotNews() {
+    public ResultObj getAllHotNews(Integer size) {
         try {
-            return ResultObj.success(getHotNewsService.grabHotNews3());
+            return getHotNewsService.grabHotNews3(size);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultObj.error("获取热搜失败");
