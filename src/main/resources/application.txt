@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: open-api
+
+
+logging:
+  level:
+    root: warn
+    com.king: info
+    org.springframework: error
+  file:
+    name: open-api.log
+    path: /tmp/logs/open-api.log
+  pattern:
+    level: debug
+
+baiduLBS:
+  sk: xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  ak: xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
