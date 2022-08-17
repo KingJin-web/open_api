@@ -8,3 +8,8 @@ logging:
     root: warn
     com.king: info
     org.springframework: error
+  file:
+    name: file
+    path: /tmp/logs/open-api.log
+  pattern:
+    level: %5p
