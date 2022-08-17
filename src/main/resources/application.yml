@@ -7,4 +7,4 @@ logging:
   level:
     root: warn
     com.king: info
-    org.springframework: warn
+    org.springframework: error
