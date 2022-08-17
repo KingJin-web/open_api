@@ -39,13 +39,13 @@ public class SnCalUtil {
         url = url.replaceFirst("http://api.map.baidu.com", "").trim();
         url = url.replaceFirst("http://yingyan.baidu.com", "").trim();
 
-        logger.info("************************Calculate Sn >>>>>url：{}", url);
+//        logger.info("************************Calculate Sn >>>>>url：{}", url);
         //url在计算sn签名的时候，不管是get请求还是post请求，必须带?
         String wholeStr = url + paramsStr + sk;
-        logger.info("************************Calculate Sn >>>>>wholeStr：" + wholeStr);
+        // logger.info("************************Calculate Sn >>>>>wholeStr：" + wholeStr);
         //对上面wholeStr再作utf8编码
         String tempStr = URLEncoder.encode(wholeStr, "UTF-8");
-//        System.out.println("************************Calculate Sn >>>>>tempStr：" + tempStr);
+        // logger.info("************************Calculate Sn >>>>>tempStr：{}", tempStr);
         //调用下面的MD5方法得到最后的sn签名
         //        System.out.println("************************Calculate Sn >>>>>Sn：" + sn);
         return MD5(tempStr);

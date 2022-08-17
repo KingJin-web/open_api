@@ -1,7 +1,15 @@
 package com.king.open_api.service;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.king.open_api.util.HttpUtils;
 import com.king.open_api.util.SnCalUtil;
-import lombok.extern.slf4j.Slf4j;
+import com.king.open_api.util.StringUtils;
+import com.king.open_api.vo.Map;
+import com.king.open_api.vo.ResultObj;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,10 +19,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -22,29 +28,30 @@ import java.util.Map.Entry;
  * @date: 2022-08-15-9:37
  * @description
  */
-@Slf4j
+@Service
 public class LBSServiceImpl {
 
     private String httpUrl = "https://api.map.baidu.com/geocoding/v3/?";
+    Logger logger = org.slf4j.LoggerFactory.getLogger(LBSServiceImpl.class);
+
+    @Value("${baiduLBS.ak}")
+    private String ak;
+    @Value("${baiduLBS.sk}")
+    private String sk;
 
     /**
      * 测试LBS服务：sn校验
      */
-    public void testLBS() throws IOException, NoSuchAlgorithmException {
-        SnCal snCal = new SnCal();
-        String ak = "CLUC13Vn0GXw9zLEGBinuygSlPaxFQXK";
+    public void testLBS() throws IOException {
         String address = "湖南省常德市武陵区";
-        String sk = "IafSKauGn7La7X1xDOo8yXus0x8xueD0";
         String url = "http://api.map.baidu.com/reverse_geocoding/v3/?";
-//        url = url.replaceFirst("http://api.map.baidu.com", "").trim();
-//        url = url.replaceFirst("http://yingyan.baidu.com", "").trim();
-        Map<String, String> paramsMap = new LinkedHashMap<String, String>();
+        java.util.Map<String, String> paramsMap = new LinkedHashMap<>();
         paramsMap.put("address", address);
         paramsMap.put("output", "json");
         paramsMap.put("ak", ak);
 //                snCal.getSn(address, ak, sk);
-        String sn = SnCalUtil.getSn(url,paramsMap , sk);
-        Map<String, String> param = new LinkedHashMap<>();
+        String sn = SnCalUtil.getSn(url, paramsMap, sk);
+        java.util.Map<String, String> param = new LinkedHashMap<>();
         param.put("address", address);
         param.put("output", "json");
         param.put("ak", ak);
@@ -55,11 +62,11 @@ public class LBSServiceImpl {
         httpUrl = httpUrl + paramString;
 
         System.out.println(httpUrl);
-        Map<String, String> result = loadJSON(httpUrl);
+        java.util.Map<String, String> result = loadJSON(httpUrl);
         System.out.println(result);
     }
 
-    public String toQueryString(Map<?, ?> data) throws UnsupportedEncodingException {
+    public String toQueryString(java.util.Map<?, ?> data) throws UnsupportedEncodingException {
         StringBuilder queryString = new StringBuilder();
         for (Entry<?, ?> pair : data.entrySet()) {
             queryString.append(pair.getKey()).append("=");
@@ -72,12 +79,31 @@ public class LBSServiceImpl {
     }
 
     /**
+     * 加载JSON数据
+     *
+     * @param url
+     * @return
+     * @throws IOException
+     */
+    public Map loadJSON2(String url, String address) {
+        String param = HttpUtils.get(url);
+        JSONObject jsonObject = JSON.parseObject(param);
+        if (jsonObject.getInteger("status") == 0) {
+            //经纬度
+            String lng = jsonObject.getJSONObject("result").getJSONObject("location").getString("lng");
+            String lat = jsonObject.getJSONObject("result").getJSONObject("location").getString("lat");
+            return new Map(address, lng, lat);
+        }
+        return null;
+    }
+
+    /**
      * 服务调用
      *
      * @param httpUrl .
      * @return .
      */
-    public static Map<String, String> loadJSON(String httpUrl) throws IOException {
+    public static java.util.Map<String, String> loadJSON(String httpUrl) throws IOException {
         BufferedReader in = null;
         try {
             URL url = new URL(httpUrl);
@@ -91,7 +117,7 @@ public class LBSServiceImpl {
 
             String str = sb.toString();
 
-            Map<String, String> map = null;
+            java.util.Map<String, String> map = null;
             if (!str.isEmpty()) {
                 int lngStart = str.indexOf("lng\":");
                 int lngEnd = str.indexOf(",\"lat");
@@ -117,8 +143,32 @@ public class LBSServiceImpl {
         return null;
     }
 
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
-        LBS lbs = new LBS();
-        lbs.testLBS();
+    /**
+     * 通过地址获取经纬度
+     */
+    public ResultObj getLngLat(String address) {
+        if (StringUtils.isEmpty(address)) {
+            return ResultObj.error("地址不能为空");
+        }
+        try {
+            java.util.Map<String, String> paramsMap = new LinkedHashMap<>();
+            paramsMap.put("address", address);
+            paramsMap.put("output", "json");
+            paramsMap.put("ak", ak);
+            String sn = SnCalUtil.getSn(httpUrl, paramsMap, sk);
+            paramsMap.put("sn", sn);
+            String paramString = toQueryString(paramsMap);
+            httpUrl = httpUrl + paramString;
+            Map as = loadJSON2(httpUrl, address);
+            if (StringUtils.isEmpty(as)) {
+                return ResultObj.error("获取经纬度失败");
+            } else {
+                return ResultObj.success("获取经纬度成功", as);
+            }
+        } catch (Exception e) {
+            logger.error("获取经纬度失败", e);
+            return ResultObj.error("获取经纬度失败");
+        }
+
     }
 }
