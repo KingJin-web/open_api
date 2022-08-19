@@ -90,7 +90,8 @@ public class TodayInHistoryServiceImpl {
                 todayInHistory.setDesc(HttpUtils.delHTMLTag(elementJO.get("desc").toString()));
                 todayInHistoryList.add(todayInHistory);
             }
-            return ResultObj.success(todayInHistoryList);
+
+            return ResultObj.success(todayInHistoryList.size(), todayInHistoryList);
         } catch (Exception e) {
             logger.error("获取历史上的今天信息失败", e);
             return ResultObj.error("获取历史上的今天信息失败");

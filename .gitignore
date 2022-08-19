@@ -6,6 +6,7 @@ target/
 !**/src/test/resources/application.yml
 *.yml
 *.log
+*.gz
 ### STS ###
 .apt_generated
 .classpath

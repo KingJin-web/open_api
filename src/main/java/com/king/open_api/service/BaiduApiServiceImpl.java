@@ -81,4 +81,29 @@ public class BaiduApiServiceImpl {
         }
 
     }
+
+    //https://api.map.baidu.com/location/ip?ak=您的AK&ip=您的IP&coor=bd09ll //GET请求
+    public ResultObj getLngLatByIp(String ip) {
+        if (StringUtils.isEmpty(ip)) {
+            return ResultObj.error("ip不能为空");
+        }
+        try {
+            logger.info("getLngLatByIp ip:{}", ip);
+            String httpUrl = "https://api.map.baidu.com/location/ip?";
+            Map<String, String> paramsMap = new LinkedHashMap<>();
+            paramsMap.put("ak", ak);
+            paramsMap.put("ip", ip);
+            paramsMap.put("coor", "bd09ll");
+            String sn = SnCalUtil.getSn(httpUrl, paramsMap, sk);
+            paramsMap.put("sn", sn);
+            String paramString = SnCalUtil.toQueryString(paramsMap);
+            httpUrl = httpUrl + paramString;
+            MapVo mapVo = loadJSON2(httpUrl, ip);
+            return ResultObj.success("获取经纬度成功", mapVo);
+        } catch (Exception e) {
+            logger.error("获取经纬度失败", e);
+            return ResultObj.error("获取经纬度失败");
+        }
+
+    }
 }
