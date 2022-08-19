@@ -1,6 +1,6 @@
 package com.king.open_api.controller;
 
-import com.king.open_api.service.LBSServiceImpl;
+import com.king.open_api.service.BaiduApiServiceImpl;
 import com.king.open_api.vo.ResultObj;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -22,11 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class MapController {
 
 
-
-    private final LBSServiceImpl lbsService;
+    private final BaiduApiServiceImpl lbsService;
 
     @Autowired
-    public MapController(LBSServiceImpl lbsService) {
+    public MapController(BaiduApiServiceImpl lbsService) {
         this.lbsService = lbsService;
     }
 
@@ -35,8 +34,8 @@ public class MapController {
      */
     @ApiOperation("根据地址获取经纬度")
     @GetMapping("/getLngLat.do")
-    @ApiImplicitParam(name = "address", value = "上海市浦东新区世纪大道", required = true,
-            dataType = "String",defaultValue = "上海市浦东新区世纪大道")
+    @ApiImplicitParam(name = "address", value = "要获取经纬度的地址", required = true,
+            dataType = "String", defaultValue = "上海市浦东新区世纪大道")
     public ResultObj getLngLat(String address) {
         return lbsService.getLngLat(address);
     }

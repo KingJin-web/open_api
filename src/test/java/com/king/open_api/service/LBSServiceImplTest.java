@@ -6,16 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.IOException;
-import java.util.Map;
-
-import static org.junit.Assert.*;
-
 @SpringBootTest
 public class LBSServiceImplTest {
 
     @Autowired
-    LBSServiceImpl lbsService;
+    BaiduApiServiceImpl lbsService;
 
     @Test
     public void getLngLat() {

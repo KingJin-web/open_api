@@ -11,18 +11,9 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * @author: Exception
@@ -30,14 +21,14 @@ import java.util.Map.Entry;
  * @description
  */
 @Service
-public class LBSServiceImpl {
+public class BaiduApiServiceImpl {
 
 
-    Logger logger = org.slf4j.LoggerFactory.getLogger(LBSServiceImpl.class);
+    Logger logger = org.slf4j.LoggerFactory.getLogger(BaiduApiServiceImpl.class);
 
-    @Value("${baiduLBS.ak}")
+    @Value("${baiduApi.ak}")
     private String ak;
-    @Value("${baiduLBS.sk}")
+    @Value("${baiduApi.sk}")
     private String sk;
 
 
@@ -49,19 +40,16 @@ public class LBSServiceImpl {
      * @throws IOException
      */
     public MapVo loadJSON2(String url, String address) {
-        try {
-            String param = HttpUtils.get(url);
-            JSONObject jsonObject = JSON.parseObject(param);
-            if (jsonObject.getInteger("status") == 0) {
-                //经纬度
-                String lng = jsonObject.getJSONObject("result").getJSONObject("location").getString("lng");
-                String lat = jsonObject.getJSONObject("result").getJSONObject("location").getString("lat");
-                return new MapVo(address, lng, lat);
-            } else {
-                throw new RuntimeException("百度LBS服务异常");
-            }
-        } catch (Exception e) {
-            logger.error("loadJSON2 error", e);
+        String param = HttpUtils.get(url);
+        JSONObject jsonObject = JSON.parseObject(param);
+        if (jsonObject.getInteger("status") == 0) {
+            //经纬度
+            JSONObject location = jsonObject.getJSONObject("result").getJSONObject("location");
+            String lng = location.getString("lng");
+            String lat = location.getString("lat");
+            return new MapVo(address, lng, lat);
+        } else {
+            logger.error("获取经纬度失败，错误码：{}，错误信息：{}", jsonObject.getInteger("status"), jsonObject.getString("message"));
             throw new RuntimeException("百度LBS服务异常");
         }
     }
@@ -85,7 +73,8 @@ public class LBSServiceImpl {
             paramsMap.put("sn", sn);
             String paramString = SnCalUtil.toQueryString(paramsMap);
             httpUrl = httpUrl + paramString;
-            return ResultObj.success("获取经纬度成功", loadJSON2(httpUrl, address));
+            MapVo mapVo = loadJSON2(httpUrl, address);
+            return ResultObj.success("获取经纬度成功", mapVo);
         } catch (Exception e) {
             logger.error("获取经纬度失败", e);
             return ResultObj.error("获取经纬度失败");
