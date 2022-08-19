@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @ApiModel(value = "地址信息")
 @NoArgsConstructor
 @Data
-public class Map {
+public class MapVo {
 //    @ApiModelProperty(value = "省份")
 //    private String province;
 //    @ApiModelProperty(value = "城市")
@@ -28,12 +28,12 @@ public class Map {
     @ApiModelProperty(value = "纬度")
     private String latitude;
 
-    public Map(String longitude, String latitude) {
+    public MapVo(String longitude, String latitude) {
         this.longitude = longitude;
         this.latitude = latitude;
     }
 
-    public Map(String detail, String longitude, String latitude) {
+    public MapVo(String detail, String longitude, String latitude) {
         this.detail = detail;
         this.longitude = longitude;
         this.latitude = latitude;

@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -59,7 +61,7 @@ public class SnCalUtil {
      * @throws UnsupportedEncodingException 异常
      */
     public static String toQueryString(Map<?, ?> data) throws UnsupportedEncodingException {
-        StringBuffer queryString = new StringBuffer();
+        StringBuilder queryString = new StringBuilder();
         for (Entry<?, ?> pair : data.entrySet()) {
             queryString.append(pair.getKey()).append("=");
             String ss[] = String.valueOf(pair.getValue()).split(",");
@@ -88,14 +90,15 @@ public class SnCalUtil {
      */
     public static String MD5(String str) {
         try {
-            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+            MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] array = md.digest(str.getBytes());
             StringBuilder sb = new StringBuilder();
             for (byte b : array) {
                 sb.append(Integer.toHexString((b & 0xFF) | 0x100), 1, 3);
             }
             return sb.toString();
-        } catch (java.security.NoSuchAlgorithmException ignored) {
+        } catch (NoSuchAlgorithmException ignored) {
+            logger.error("", ignored);
         }
         return null;
     }
