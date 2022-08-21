@@ -6,6 +6,7 @@ import com.king.open_api.util.IPUtils;
 import com.king.open_api.util.StringUtils;
 import com.king.open_api.vo.ResultObj;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,6 +67,8 @@ public class WeatherController {
 
     @ApiOperation(value = "获取今天天气信息通过地址", notes = "获取今天天气信息通过地址")
     @GetMapping("/getWeatherToDayByAddress.do")
+    @ApiImplicitParam(name = "city", value = "要获取天气的地址", required = true,
+            dataType = "String", defaultValue = "上海市浦东新区世纪大道",dataTypeClass = String.class)
     public ResultObj getWeatherToDayByAddress(String city) {
         try {
             return weatherService.getTodayWeather(city);
@@ -78,6 +81,8 @@ public class WeatherController {
 
     @ApiOperation(value = "获取天气信息通过地址", notes = "获取天气信息通过地址")
     @GetMapping("/getWeatherByAddress.do")
+    @ApiImplicitParam(name = "city", value = "要获取天气的地址", required = true,
+            dataType = "String", defaultValue = "上海市浦东新区世纪大道",dataTypeClass = String.class)
     public ResultObj getWeatherByAddress(String city) {
         try {
             return weatherService.getWeatherByAddress(city);

@@ -28,17 +28,24 @@ public class RandomController {
     @RequestMapping("/getRandomString.do")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "length", value = "随机字符串长度 须大于0小于1000 如果小于等于0 则默认为10 ", required = false,
-                    dataType = "int", defaultValue = "10", paramType = "query",dataTypeClass = String.class,example = "10", allowableValues = "range[1,1000]"),
+                    dataType = "int", defaultValue = "10", paramType = "query", dataTypeClass = String.class, example = "10",
+                    allowableValues = "range[1,1000]"),
             @ApiImplicitParam(name = "isUpperCase", value = "是否有大写字母(A-Z)", required = false,
-                    dataType = "String", defaultValue = "true", dataTypeClass = Boolean.class, allowableValues = "true,false"),
+                    dataType = "Boolean", defaultValue = "true", dataTypeClass = Boolean.class, example = "true"),
             @ApiImplicitParam(name = "isLowerCase", value = "是否有小写字母(a-z) ", required = false,
-                    dataType = "Boolean", defaultValue = "true", dataTypeClass = Boolean.class, allowableValues = "true,false"),
+                    dataType = "Boolean", defaultValue = "true", dataTypeClass = Boolean.class, example = "true"),
             @ApiImplicitParam(name = "isNumber", value = "是否有数字(0-9)", required = false,
-                    dataType = "Boolean", defaultValue = "true", dataTypeClass = Boolean.class, allowableValues = "true,false"),
+                    dataType = "Boolean", defaultValue = "true", dataTypeClass = Boolean.class, example = "true"),
             @ApiImplicitParam(name = "isOther", value = "是否有其他符号(~!@#$%^&*()-+_=,.)", required = false,
-                    dataType = "Boolean", defaultValue = "true", dataTypeClass = Boolean.class, allowableValues = "true,false")
+                    dataType = "Boolean", defaultValue = "true", dataTypeClass = Boolean.class, example = "true")
     })
     public String getRandomString(Integer length, Boolean isUpperCase, Boolean isLowerCase, Boolean isNumber, Boolean isOther) {
         return RandomUtils.getRandomString(length, isUpperCase, isLowerCase, isNumber, isOther);
     }
+
+
+
+
+
+
 }

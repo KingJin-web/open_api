@@ -37,7 +37,7 @@ public class TodayInHistoryController {
     @ApiOperation(value = "获取历史上的指定日期的今天", notes = "获取历史上的指定日期的今天")
     @GetMapping("/getTodayInHistoryByDate.do")
     @ApiImplicitParam(name = "date", value = "格式MM-DD", required = true,
-            dataType = "String", defaultValue = "上海市浦东新区世纪大道")
+            dataType = "String", defaultValue = "上海市浦东新区世纪大道", dataTypeClass = String.class, example = "上海市浦东新区世纪大道")
     public ResultObj getTodayInHistoryByDate(String date) {
         return todayInHistoryService.getTodayInHistory(date);
     }

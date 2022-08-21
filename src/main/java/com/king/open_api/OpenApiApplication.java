@@ -13,6 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class OpenApiApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(OpenApiApplication.class, args);
     }
 

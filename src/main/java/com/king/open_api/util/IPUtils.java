@@ -2,9 +2,12 @@ package com.king.open_api.util;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
+import lombok.val;
+import org.slf4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.*;
+import java.util.Enumeration;
 
 /**
  * @author: King
@@ -13,6 +16,9 @@ import java.net.*;
  * @description:
  */
 public class IPUtils {
+
+    static Logger logger = org.slf4j.LoggerFactory.getLogger(IPUtils.class);
+
     /**
      * @param ip
      * @return
@@ -38,8 +44,10 @@ public class IPUtils {
         sb.append(String.valueOf((ipLong & 0x000000FF)));
         return sb.toString();
     }
+
     /**
      * 获取本机公网IP
+     *
      * @return ip
      */
     public static String getLocalIp() {
@@ -51,7 +59,7 @@ public class IPUtils {
             try {
                 String url = "http://httpbin.org/ip";
                 return JSON.parseObject(HttpUtil.get(url)).get("origin").toString();
-            }catch (Exception e1){
+            } catch (Exception e1) {
                 e1.printStackTrace();
                 try {
                     return InetAddress.getLocalHost().getHostAddress();
@@ -66,21 +74,35 @@ public class IPUtils {
     //从http中获取ip
     public static String getIPAddress(HttpServletRequest request) {
         String ipAddress = null;
+//        Enumeration<String> headerNames = request.getHeaderNames();
+//        while (headerNames.hasMoreElements()) {
+//            String key = headerNames.nextElement();
+//            logger.info("key:{}", key);
+//            if (key.equals("x-forwarded-for")) {
+//                ipAddress = request.getHeader(key);
+//                logger.info("x-forwarded-for:{}", ipAddress);
+//            } else if (key.equals("Proxy-Client-IP")) {
+//                ipAddress = request.getHeader(key);
+//            } else if (key.equals("WL-Proxy-Client-IP")) {
+//                ipAddress = request.getHeader(key);
+//            }
+//        }
         try {
             ipAddress = request.getHeader("x-forwarded-for");
-            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+            if (StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
                 ipAddress = request.getHeader("Proxy-Client-IP");
             }
-            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+            if (StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
                 ipAddress = request.getHeader("WL-Proxy-Client-IP");
             }
-            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+            if (StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
                 ipAddress = request.getRemoteAddr();
-               //如果是127。。。。。的话，就是本机的ip
+                //如果是127。。。。。的话，就是本机的ip
                 if (ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1") || ipAddress.equals("::1")) {
                     ipAddress = getLocalIp();
                 }
             }
+            logger.info("ipAddress:{}", ipAddress);
             // 对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
             if (ipAddress != null && ipAddress.length() > 15) { // "***.***.***.***".length()
                 if (ipAddress.indexOf(",") > 0) {
@@ -93,10 +115,6 @@ public class IPUtils {
         return ipAddress;
     }
 
-
-    public static void main(String[] args) {
-        System.out.println(getLocalIp());
-    }
 
 
 }
