@@ -7,11 +7,13 @@ import com.king.open_api.util.SnCalUtil;
 import com.king.open_api.util.StringUtils;
 import com.king.open_api.vo.MapVo;
 import com.king.open_api.vo.ResultObj;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -69,12 +71,7 @@ public class BaiduApiServiceImpl {
             paramsMap.put("address", address);
             paramsMap.put("output", "json");
             paramsMap.put("ak", ak);
-            String sn = SnCalUtil.getSn(httpUrl, paramsMap, sk);
-            paramsMap.put("sn", sn);
-            String paramString = SnCalUtil.toQueryString(paramsMap);
-            httpUrl = httpUrl + paramString;
-            MapVo mapVo = loadJSON2(httpUrl, address);
-            return ResultObj.success("获取经纬度成功", mapVo);
+            return getResultObj(address, httpUrl, paramsMap);
         } catch (Exception e) {
             logger.error("获取经纬度失败", e);
             return ResultObj.error("获取经纬度失败");
@@ -94,16 +91,21 @@ public class BaiduApiServiceImpl {
             paramsMap.put("ak", ak);
             paramsMap.put("ip", ip);
             paramsMap.put("coor", "bd09ll");
-            String sn = SnCalUtil.getSn(httpUrl, paramsMap, sk);
-            paramsMap.put("sn", sn);
-            String paramString = SnCalUtil.toQueryString(paramsMap);
-            httpUrl = httpUrl + paramString;
-            MapVo mapVo = loadJSON2(httpUrl, ip);
-            return ResultObj.success("获取经纬度成功", mapVo);
+            return getResultObj(ip, httpUrl, paramsMap);
         } catch (Exception e) {
             logger.error("获取经纬度失败", e);
             return ResultObj.error("获取经纬度失败");
         }
 
+    }
+
+    @NotNull
+    private ResultObj getResultObj(String ip, String httpUrl, Map<String, String> paramsMap) throws UnsupportedEncodingException {
+        String sn = SnCalUtil.getSn(httpUrl, paramsMap, sk);
+        paramsMap.put("sn", sn);
+        String paramString = SnCalUtil.toQueryString(paramsMap);
+        httpUrl = httpUrl + paramString;
+        MapVo mapVo = loadJSON2(httpUrl, ip);
+        return ResultObj.success("获取经纬度成功", mapVo);
     }
 }

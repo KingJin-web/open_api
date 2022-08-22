@@ -17,7 +17,7 @@ import java.util.List;
  * @description:
  */
 @Service
-public class NewsApiService {
+public class NewsApiServiceImpl {
     //腾讯新闻接口
     public static final String TENCENT_NEWS_API = "https://i.news.qq.com/trpc.qqnews_web.kv_srv.kv_srv_http_proxy/list?sub_srv_id=24hours&srv_id=pc&offset=0&limit=30&strategy=1&ext={%22pool%22:[%22top%22],%22is_filter%22:7,%22check_type%22:true}";
     //新浪新闻接口
@@ -27,7 +27,7 @@ public class NewsApiService {
     //澎湃新闻接口
     public static final String PENPAI_NEWS_API = "https://api.caijing.com.cn/api/v2/news/list?page=1&page_size=20&cid=&wm=b207&from=6042095012&chwm=12050_0001&oldchwm=12050_0001&imei=&uid=&mac=&mid=&idfa=&openudid=&title=&abtest=&udid=&wifi=1&v=2&sudaref=&lng=&lat=&city=&province=&country=&isp=&network_type=&language=&os=&os_version=&device_type=&resolution=&aid=12050&token=&_signature=0A5F8F8F7F7B1C1";
 
-    Logger logger = org.slf4j.LoggerFactory.getLogger(NewsApiService.class);
+    Logger logger = org.slf4j.LoggerFactory.getLogger(NewsApiServiceImpl.class);
 
     public ResultObj getNews() {
         String s = getTencentNews();

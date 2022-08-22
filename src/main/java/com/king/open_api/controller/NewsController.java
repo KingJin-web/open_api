@@ -1,6 +1,6 @@
 package com.king.open_api.controller;
 
-import com.king.open_api.service.NewsApiService;
+import com.king.open_api.service.NewsApiServiceImpl;
 import com.king.open_api.vo.ResultObj;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/news")
-@Api(value = "新闻", tags = "新闻")
+@Api(value = "新闻api", tags = "新闻api")
 public class NewsController {
-    private NewsApiService newsApiService;
+    private NewsApiServiceImpl newsApiService;
 
     @Autowired
-    public void setNewsApiService(NewsApiService newsApiService) {
+    public void setNewsApiService(NewsApiServiceImpl newsApiService) {
         this.newsApiService = newsApiService;
     }
 

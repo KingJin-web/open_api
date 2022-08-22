@@ -15,7 +15,7 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Objects;
+
 /**
  * @author: King
  * @project: springboot
@@ -46,8 +46,8 @@ import java.util.Objects;
  * 注意，这个文件里的ip地址和所有的偏移量均采用little-endian格式，而java是采用
  * big-endian格式的，要注意转换
  */
-public class IPSeekerService {
-    private static final Logger logger = LoggerFactory.getLogger(IPSeekerService.class);
+public class IPSeekerServiceImpl {
+    private static final Logger logger = LoggerFactory.getLogger(IPSeekerServiceImpl.class);
 
     /**
      * * 用来封装ip相关信息，目前只有两个字段，ip所在的国家和地区
@@ -86,7 +86,7 @@ public class IPSeekerService {
     // 内存映射文件
     private MappedByteBuffer mbb;
     // 单一模式实例
-    private static final IPSeekerService instance = new IPSeekerService();
+    private static final IPSeekerServiceImpl instance = new IPSeekerServiceImpl();
     // 起始地区的开始和结束的绝对偏移
     private long ipBegin, ipEnd;
     // 为提高效率而采用的临时变量
@@ -98,7 +98,7 @@ public class IPSeekerService {
     /**
      * 私有构造函数
      */
-    private IPSeekerService() {
+    private IPSeekerServiceImpl() {
 
         ipCache = new Hashtable<String, IPLocation>();
         loc = new IPLocation();
@@ -133,7 +133,7 @@ public class IPSeekerService {
     /**
      * @return 单一实例
      */
-    public static IPSeekerService getInstance() {
+    public static IPSeekerServiceImpl getInstance() {
         return instance;
     }
 

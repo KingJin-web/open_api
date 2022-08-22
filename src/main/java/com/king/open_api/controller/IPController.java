@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/api/ip")
-@Api(value = "ip", tags = "ip")
+@Api(value = "ip相关api", tags = "ip")
 public class IPController {
 
     private final GetAddressFromIpService getAddressFromIpService;

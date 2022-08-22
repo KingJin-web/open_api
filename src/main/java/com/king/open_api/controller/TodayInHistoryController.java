@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/todayInHistory")
-@Api(value = "历史上的今天", tags = "历史上的今天")
+@Api(value = "历史上的今天api", tags = "历史上的今天api")
 public class TodayInHistoryController {
 
     private final TodayInHistoryServiceImpl todayInHistoryService;

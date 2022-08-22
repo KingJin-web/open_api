@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/api/weather")
-@Api(value = "天气接口", tags = "天气接口")
+@Api(value = "天气api", tags = "天气api")
 public class WeatherController {
     private final GetAddressFromIpService getAddressFromIpService;
 

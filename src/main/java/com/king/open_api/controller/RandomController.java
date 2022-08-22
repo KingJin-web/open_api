@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +26,7 @@ public class RandomController {
      * @return
      */
     @ApiOperation(value = "生成随机字符串", notes = "生成随机字符串")
-    @RequestMapping("/getRandomString.do")
+    @GetMapping("/getRandomString.do")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "length", value = "随机字符串长度 须大于0小于1000 如果小于等于0 则默认为10 ", required = false,
                     dataType = "int", defaultValue = "10", paramType = "query", dataTypeClass = String.class, example = "10",
@@ -44,8 +45,16 @@ public class RandomController {
     }
 
 
-
-
-
+    @ApiOperation(value = "生成随机姓名", notes = "生成随机姓名")
+    @GetMapping("/getRandomName.do")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "isMale", value = "是否男性", required = false,
+//                    dataType = "Boolean", defaultValue = "true", dataTypeClass = Boolean.class, example = "true"),
+//            @ApiImplicitParam(name = "isFemale", value = "是否女性", required = false,
+//                    dataType = "Boolean", defaultValue = "true", dataTypeClass = Boolean.class, example = "true")
+//    })
+    public String getRandomName(Boolean isMale, Boolean isFemale) {
+        return RandomUtils.getRandomName(isMale, isFemale);
+    }
 
 }

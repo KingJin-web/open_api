@@ -3,7 +3,6 @@ package com.king.open_api.service;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.google.gson.JsonObject;
 import com.king.open_api.entity.IPEntryCN;
 import com.king.open_api.util.HttpUtils;
 import com.king.open_api.util.StringUtils;
@@ -128,7 +127,7 @@ public class GetAddressFromIpService {
      * @return
      */
     public IPEntryCN getAddressFromIpCz88(String ip) {
-        IPSeekerService ipSeekerService = IPSeekerService.getInstance();
+        IPSeekerServiceImpl ipSeekerService = IPSeekerServiceImpl.getInstance();
         IPEntryCN ipEntryCN = new IPEntryCN();
         ipEntryCN.setQueryIp(ip);
         ipEntryCN.setCountry(ipSeekerService.getCountry(ip));

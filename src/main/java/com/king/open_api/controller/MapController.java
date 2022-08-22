@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/address")
-@Api(value = "地址", tags = "地址")
+@Api(value = "地址api", tags = "地址api")
 public class MapController {
 
 

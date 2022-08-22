@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/hotnews")
-@Api(value = "热点新闻", tags = "热点新闻")
+@Api(value = "热搜api", tags = "热搜api")
 public class GetHotNewsController {
     private final GetHotNewsServiceImpl getHotNewsService;
 
