@@ -1,6 +1,7 @@
 package com.king.open_api.controller;
 
 import com.king.open_api.util.RandomUtils;
+import com.king.open_api.vo.ResultObj;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -40,8 +41,9 @@ public class RandomController {
             @ApiImplicitParam(name = "isOther", value = "是否有其他符号(~!@#$%^&*()-+_=,.)", required = false,
                     dataType = "Boolean", defaultValue = "true", dataTypeClass = Boolean.class, example = "true")
     })
-    public String getRandomString(Integer length, Boolean isUpperCase, Boolean isLowerCase, Boolean isNumber, Boolean isOther) {
-        return RandomUtils.getRandomString(length, isUpperCase, isLowerCase, isNumber, isOther);
+    public ResultObj getRandomString(Integer length, Boolean isUpperCase, Boolean isLowerCase, Boolean isNumber, Boolean isOther) {
+      return RandomUtils.getRandomString(length, isUpperCase, isLowerCase, isNumber, isOther);
+
     }
 
 
@@ -53,8 +55,8 @@ public class RandomController {
 //            @ApiImplicitParam(name = "isFemale", value = "是否女性", required = false,
 //                    dataType = "Boolean", defaultValue = "true", dataTypeClass = Boolean.class, example = "true")
 //    })
-    public String getRandomName(Boolean isMale, Boolean isFemale) {
-        return RandomUtils.getRandomName(isMale, isFemale);
+    public String getRandomName() {
+        return RandomUtils.getRandomName();
     }
 
 }

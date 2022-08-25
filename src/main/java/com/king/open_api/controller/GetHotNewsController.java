@@ -61,7 +61,7 @@ public class GetHotNewsController {
             if (StringUtils.isEmpty(size)) {
                 return ResultObj.error("请输入获取热搜的数量");
             }
-            return ResultObj.success(getHotNewsService.grabHotNews2(size));
+            return getHotNewsService.grabHotNews3(size);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultObj.error("获取热搜组合版失败");

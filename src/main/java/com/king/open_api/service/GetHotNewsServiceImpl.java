@@ -23,7 +23,7 @@ import java.util.*;
  * @author: King
  * @project: vibrator-spider
  * @date: 2022年07月28日 09:39
- * @description:
+ * @description: 热搜
  */
 @Service
 public class GetHotNewsServiceImpl {
@@ -154,6 +154,22 @@ public class GetHotNewsServiceImpl {
             return ResultObj.error("参数错误");
         }
         try {
+            Set<String> set = getHotNews(size);
+            StringBuilder sb = new StringBuilder();
+            for (String s : set) {
+                sb.append(s).append("。");
+            }
+            return ResultObj.success("获取热搜成功", set.size(), sb.toString());
+        } catch (Exception e) {
+            logger.error("抓取热点排行榜异常：", e);
+            return ResultObj.error("获取热搜失败");
+        }
+
+
+    }
+
+    public Set<String> getHotNews(int size) {
+        try {
             List<NewsModel> list1 = grabBaiduHotNews();
             List<NewsModel> list2 = grabWeiBoHotNews();
             List<NewsModel> list3 = getDouYinHotNews();
@@ -185,25 +201,33 @@ public class GetHotNewsServiceImpl {
             for (int i = 0; i < l3; i++) {
                 set.add(list3.get(i).getTitle());
             }
-            for (String s : set) {
-                sb.append(s).append("。");
-            }
             if (set.size() < size) {
                 int n = size - set.size();
                 if ((list1.size() - l1) < n) {
                     n = list1.size() - l1;
                 }
                 for (int i = 0; i < n; i++) {
-                    sb.append(list1.get(++j).getTitle()).append("。");
+                    set.add(list1.get(++j).getTitle());
                 }
             }
-            return ResultObj.success("获取热搜成功", set.size(), sb.toString());
+            return set;
         } catch (Exception e) {
             logger.error("抓取热点排行榜异常：", e);
-            return ResultObj.error("获取热搜失败");
+            return null;
         }
+    }
 
-
+    public List<String> getHotNews4(Integer size) {
+        if (size <= 0 || StringUtils.isEmpty(size)) {
+            return null;
+        }
+        try {
+            //set 转list
+            return new ArrayList<>(getHotNews(size));
+        } catch (Exception e) {
+            logger.error("抓取热点排行榜异常：", e);
+            return null;
+        }
     }
 
     //获取抖音热搜

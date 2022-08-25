@@ -1,26 +1,15 @@
 package com.king.open_api.service;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.king.open_api.util.HttpUtils;
 import com.king.open_api.vo.ResultObj;
 import com.king.open_api.vo.TodayInHistory;
-import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.*;
 
 /**
