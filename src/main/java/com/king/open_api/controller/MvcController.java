@@ -33,18 +33,18 @@ public class MvcController implements WebServerFactoryCustomizer<UndertowServlet
         });
     }
 
-    @ApiOperation(value = "", hidden = true)
-    @GetMapping("/")
-    public void index(HttpServletRequest request, HttpServletResponse response) {
-        //重定向到首页
-        try {
-            String ip = IPUtils.getIPAddress(request);
-            //request.getRequestDispatcher("/跳转地址").forward(request,response);
-            response.sendRedirect("http://api.wuzhaoqi.top/index.html?ip=" + ip);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @ApiOperation(value = "", hidden = true)
+//    @GetMapping("/")
+//    public void index(HttpServletRequest request, HttpServletResponse response) {
+//        //重定向到首页
+//        try {
+//            String ip = IPUtils.getIPAddress(request);
+//            //request.getRequestDispatcher("/跳转地址").forward(request,response);
+//            response.sendRedirect("http://api.wuzhaoqi.top/index.html?ip=" + ip);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
 }

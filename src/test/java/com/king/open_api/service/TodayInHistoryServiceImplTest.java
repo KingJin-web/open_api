@@ -1,20 +1,20 @@
-//package com.king.open_api.service;
-//
-//import cn.hutool.http.HttpRequest;
-//import com.king.open_api.vo.TodayInHistory;
-//import org.jsoup.Jsoup;
-//import org.junit.jupiter.api.Test;
-//import org.slf4j.Logger;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//
-//import java.util.*;
-//
-//import static org.junit.Assert.*;
-//
-//@SpringBootTest
-//public class TodayInHistoryServiceImplTest {
-//
+package com.king.open_api.service;
+
+import cn.hutool.http.HttpRequest;
+import com.king.open_api.vo.TodayInHistory;
+import org.jsoup.Jsoup;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.*;
+
+import static org.junit.Assert.*;
+
+@SpringBootTest
+public class TodayInHistoryServiceImplTest {
+
 //    @Test
 //    public void getTodayInHistory() {
 //        // 第一步，拼接URL
@@ -107,35 +107,42 @@
 //    }
 //
 //
-//
-//    @Test
-//    void deleteHtmlTags() {
-//        //定义字符串
-//        String htmlStr = "埃里希·<a target=\\\"_blank\\\" href=\\\"https://baike.baidu.com/item/%E5%85%8B%E8%8E%B1%E4%BC%AF\\\">克莱伯</a>（Erich·Kleiber，1890年8月5日—1956年1月27日），20世纪伟大的<a target=\\\"_blank\\\" href=\\\"https://baike.baidu.com/item/%E6%8C%87%E6%8C%A5\\\">指挥</a>之一，<a target=\\\"_blank\\\" href=\\\"https://baike.baidu.com/item/%E5%8D%A1%E6%B4%9B%E6%96%AF%C2%B7%E5%85%8B%E8%8E%B1%E4%BC%AF\\\">卡洛斯·克莱伯</a>之父；1890年出生在<a target=\\\"_blank\\\" href=\\\"https://baike.baidu.com/item/%E5%A5%A5%E5%9C%B0%E5%88%A9\\\">奥地";
-//        //定义script的正则表达式，去除js可以防止注入
-//        String scriptRegex = "<script[^>]*?>[\\s\\S]*?<\\/script>";
-//        //定义style的正则表达式，去除style样式，防止css代码过多时只截取到css样式代码
-//        String styleRegex = "<style[^>]*?>[\\s\\S]*?<\\/style>";
-//        //定义HTML标签的正则表达式，去除标签，只提取文字内容
-//        String htmlRegex = "<[^>]+>";
-//        //定义空格,回车,换行符,制表符
-//        String spaceRegex = "\\s*|\t|\r|\n";
-//        // 过滤script标签
-//        htmlStr = htmlStr.replaceAll(scriptRegex, "");
-//        // 过滤style标签
-//        htmlStr = htmlStr.replaceAll(styleRegex, "");
-//        // 过滤html标签
-//        htmlStr = htmlStr.replaceAll(htmlRegex, "");
-//        // 过滤空格等
-//        htmlStr = htmlStr.replaceAll(spaceRegex, "");
-//        // 过滤&nbsp;
-//        htmlStr = htmlStr.replace("&nbsp;", "");
-//        // 过滤&nbsp
-//        htmlStr = htmlStr.replace("&nbsp", "");
-//        // 返回文本字符串
-//        htmlStr = htmlStr.trim();
-//        //去除空格" "
-//        htmlStr = htmlStr.replaceAll(" ", "");
-//        System.out.println(htmlStr);
-//    }
-//}
+
+    @Test
+    void deleteHtmlTags() {
+        //定义字符串
+        String htmlStr = "埃里希·<a target=\\\"_blank\\\" href=\\\"https://baike.baidu.com/item/%E5%85%8B%E8%8E%B1%E4%BC%AF\\\">克莱伯</a>（Erich·Kleiber，1890年8月5日—1956年1月27日），20世纪伟大的<a target=\\\"_blank\\\" href=\\\"https://baike.baidu.com/item/%E6%8C%87%E6%8C%A5\\\">指挥</a>之一，<a target=\\\"_blank\\\" href=\\\"https://baike.baidu.com/item/%E5%8D%A1%E6%B4%9B%E6%96%AF%C2%B7%E5%85%8B%E8%8E%B1%E4%BC%AF\\\">卡洛斯·克莱伯</a>之父；1890年出生在<a target=\\\"_blank\\\" href=\\\"https://baike.baidu.com/item/%E5%A5%A5%E5%9C%B0%E5%88%A9\\\">奥地";
+        //定义script的正则表达式，去除js可以防止注入
+        String scriptRegex = "<script[^>]*?>[\\s\\S]*?<\\/script>";
+        //定义style的正则表达式，去除style样式，防止css代码过多时只截取到css样式代码
+        String styleRegex = "<style[^>]*?>[\\s\\S]*?<\\/style>";
+        //定义HTML标签的正则表达式，去除标签，只提取文字内容
+        String htmlRegex = "<[^>]+>";
+        //定义空格,回车,换行符,制表符
+        String spaceRegex = "\\s*|\t|\r|\n";
+        // 过滤script标签
+        htmlStr = htmlStr.replaceAll(scriptRegex, "");
+        // 过滤style标签
+        htmlStr = htmlStr.replaceAll(styleRegex, "");
+        // 过滤html标签
+        htmlStr = htmlStr.replaceAll(htmlRegex, "");
+        // 过滤空格等
+        htmlStr = htmlStr.replaceAll(spaceRegex, "");
+        // 过滤&nbsp;
+        htmlStr = htmlStr.replace("&nbsp;", "");
+        // 过滤&nbsp
+        htmlStr = htmlStr.replace("&nbsp", "");
+        // 返回文本字符串
+        htmlStr = htmlStr.trim();
+        //去除空格" "
+        htmlStr = htmlStr.replaceAll(" ", "");
+        System.out.println(htmlStr);
+    }
+
+    @Autowired
+    private TodayInHistoryServiceImpl todayInHistoryService;
+    @Test
+    public void test2(){
+        System.out.println(todayInHistoryService.getTodayInHistoryByDate("01-01"));
+    }
+}

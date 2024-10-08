@@ -14,9 +14,10 @@
     }
 
     //自动跳转至 /doc.html
-    setTimeout(function () {
-        window.location.href = "http://api.wuzhaoqi.top/doc.html?ip=" + getUrlParam("ip");
-    }, 1000);
+    if (getUrlParam("ip") == null) {
+        window.location.href = "/doc.html";
+    }
+
 </script>
 <body>
 <h1>Open-Api</h1>

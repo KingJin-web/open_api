@@ -4,6 +4,7 @@ import com.king.open_api.vo.NewsModel;
 import lombok.Data;
 import org.springframework.stereotype.Controller;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -24,7 +25,7 @@ public class TencentNews {
     public List<NewsModel> toNewsModelList(int size) {
         List<News> list = data.list;
         //随机取出size个新闻
-        Random random = new Random();
+        SecureRandom random = new SecureRandom();
         if (list.size() < size) {
             size = list.size();
         }
