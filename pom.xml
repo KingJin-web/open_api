@@ -72,12 +72,7 @@
             <version>3.0.3</version>
         </dependency>
         <!-- 整合swagger end -->
-        <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-http -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-http</artifactId>
-            <version>5.8.5</version>
-        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-core -->
         <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
@@ -94,6 +89,23 @@
         </dependency>
 
 
+<!--        &lt;!&ndash; 词云 &ndash;&gt;-->
+        <dependency>
+            <groupId>com.kennycason</groupId>
+            <artifactId>kumo-core</artifactId>
+            <version>1.28</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kennycason</groupId>
+            <artifactId>kumo-tokenizers</artifactId>
+            <version>1.28</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huaban</groupId>
+            <artifactId>jieba-analysis</artifactId>
+            <version>1.0.2</version>
+        </dependency>
 <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.kennycason/kumo-core &ndash;&gt;-->
 <!--        <dependency>-->
 <!--            <groupId>com.kennycason</groupId>-->

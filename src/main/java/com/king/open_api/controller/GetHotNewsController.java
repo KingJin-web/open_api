@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author: King
  * @project: vibrator-spider
@@ -89,6 +91,21 @@ public class GetHotNewsController {
             e.printStackTrace();
             return ResultObj.error("获取热搜失败");
         }
+    }
+
+    //获取热搜词云图
+    @ApiOperation(value = "获取热搜词云图", notes = "获取热搜词云图")
+    @GetMapping("/getHotNewsWordCloud.do")
+    public ResultObj getHotNewsWordCloud() {
+
+            return ResultObj.success(getHotNewsService.getHotNewsWordCloud());
+
+    }
+
+    @ApiOperation(value = "获取热搜词云图", notes = "获取热搜词云图")
+    @GetMapping("/getHotNewsWordCloud.png")
+    public void getHotNewsWordCloud1(HttpServletResponse response) {
+        getHotNewsService.getHotNewsWordCloud1(response);
     }
 
 }

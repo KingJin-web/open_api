@@ -76,7 +76,7 @@ public class MingYan {
             case 4:
                 return "周三下午好，记得按时吃饭，照顾好自己鸭！";
             case 5:
-                return getWeekTips();
+                return getKfc();
             case 6:
                 return "周五下午好，哪怕明天是双休日今天也要早点休息鸭！";
             case 7:

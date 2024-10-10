@@ -7,6 +7,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.king.open_api.entity.WeiBoHot;
 import com.king.open_api.util.HttpUtils;
 import com.king.open_api.util.StringUtils;
+import com.king.open_api.util.WordCodeUtil;
 import com.king.open_api.vo.NewsModel;
 import com.king.open_api.vo.ResultObj;
 import org.jsoup.Jsoup;
@@ -16,6 +17,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
@@ -30,61 +32,6 @@ public class GetHotNewsServiceImpl {
 
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(GetHotNewsServiceImpl.class);
 
-    /**
-     * 抓取百度热点排行榜
-     *
-     * @return
-     */
-    public List<NewsModel> grabBaiduHotNews() {
-        String url = "https://top.baidu.com/board?tab=realtime&sa=fyb_realtime_31065";
-        List<NewsModel> list = new ArrayList<>();
-        try {
-            Document doc = Jsoup.connect(url).get();
-            //标题
-            Elements titles = doc.select(".c-single-text-ellipsis");
-            //图片
-            Elements imgs = doc.select(".category-wrap_iQLoo .index_1Ew5p").next("img");
-            //内容
-            Elements contents = doc.select(".hot-desc_1m_jR.large_nSuFU");
-            //推荐图
-            Elements urls = doc.select(".category-wrap_iQLoo a.img-wrapper_29V76");
-            //热搜指数
-            Elements levels = doc.select(".hot-index_1Bl1a");
-            for (int i = 0; i < levels.size(); i++) {
-                NewsModel o = new NewsModel();
-                o.setTitle(titles.get(i).text().trim());
-                o.setImg(imgs.get(i).attr("src"));
-                o.setContent(contents.get(i).text().replaceAll("查看更多>", "").trim());
-                o.setUrl(urls.get(i).attr("href"));
-//                o.setLevel(levels.get(i).text().trim());
-                list.add(o);
-            }
-            return list;
-
-        } catch (IOException e) {
-            logger.error("抓取百度热点排行榜异常：" + e.getMessage());
-        }
-        return null;
-    }
-
-    /**
-     * 抓取微博热搜榜
-     */
-    public List<NewsModel> grabWeiBoHotNews() {
-        String url = "https://weibo.com/ajax/statuses/hot_band";
-        String s = HttpUtil.get(url);
-        WeiBoHot weiBoHot = JSON.parseObject(s, WeiBoHot.class);
-        List<NewsModel> list = new ArrayList<>();
-        for (WeiBoHot.WeiBo weiBo : weiBoHot.getData().getBand_list()) {
-            NewsModel o = new NewsModel();
-            o.setTitle(weiBo.getNote());
-            o.setImg(weiBo.getMblog());
-            o.setContent(weiBo.getWord());
-            o.setUrl(weiBo.getWord_scheme());
-            list.add(o);
-        }
-        return list;
-    }
 
     public String grabWeiBoHotNews2() {
         String url = "https://weibo.com/ajax/statuses/hot_band";
@@ -168,6 +115,82 @@ public class GetHotNewsServiceImpl {
 
     }
 
+
+    //获取抖音热搜
+
+    public String getDouYinHotNews2() {
+        try {
+            String s = getDouYinHots();
+            logger.info(s);
+            StringBuilder sb = new StringBuilder();
+            JSONArray jsonArray = JSON.parseObject(s).getJSONArray("word_list");
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                sb.append(jsonObject.getString("word")).append("。");
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            logger.error("JSON解析失败", e);
+            return null;
+        }
+    }
+
+
+    public String getDouYinHots() {
+        try {
+            Map<String, String> map = new HashMap<>();
+            map.put("authority", "douyin.com");
+            map.put("referer", "https://www.iesdouyin.com/");
+            map.put("path", "/web/api/v2/hotsearch/billboard/word/");
+            map.put("scheme", "https");
+            map.put("method", "GET");
+            map.put("accept", "*/*");
+//            map.put("accept-encoding", "gzip, deflate, br");
+//            map.put("accept-language", "zh-CN,zh;q=0.9");
+//            map.put("content-length", "1783");
+
+            return HttpUtils.getRandomUserAgent("https://www.iesdouyin.com/web/api/v2/hotsearch/billboard/word/?reflow_source=reflow_page", map);
+        } catch (Exception e) {
+            logger.error("获取抖音热搜失败", e);
+            return null;
+        }
+    }
+
+
+    public ResultObj getHotNewsWordCloud() {
+        try {
+            return ResultObj.success(WordCodeUtil.getWordCloud2(getHotNews4(50)));
+        } catch (Exception e) {
+            logger.error("获取热搜词云图失败", e);
+            return ResultObj.error("获取热搜词云图失败");
+        }
+
+    }
+
+    public void getHotNewsWordCloud1(HttpServletResponse response) {
+        try {
+            response.setContentType("image/png");
+            WordCodeUtil.getWordCloud3(getHotNews4(50), response);
+        } catch (Exception e) {
+            logger.error("获取热搜词云图失败", e);
+        }
+
+    }
+
+
+    public List<String> getHotNews4(Integer size) {
+        if (size <= 0 || StringUtils.isEmpty(size)) {
+            return null;
+        }
+        try {
+            //set 转list
+            return new ArrayList<>(getHotNews(size));
+        } catch (Exception e) {
+            logger.error("抓取热点排行榜异常：", e);
+            return null;
+        }
+    }
+
     public Set<String> getHotNews(int size) {
         try {
             List<NewsModel> list1 = grabBaiduHotNews();
@@ -189,7 +212,6 @@ public class GetHotNewsServiceImpl {
             if (list3.size() < l3) {
                 l3 = list3.size();
             }
-            StringBuilder sb = new StringBuilder();
             int j = 0;
             for (j = 0; j < l1; j++) {
                 set.add(list1.get(j).getTitle());
@@ -217,34 +239,67 @@ public class GetHotNewsServiceImpl {
         }
     }
 
-    public List<String> getHotNews4(Integer size) {
-        if (size <= 0 || StringUtils.isEmpty(size)) {
-            return null;
-        }
+    /**
+     * 抓取百度热点排行榜
+     *
+     * @return
+     */
+    public List<NewsModel> grabBaiduHotNews() {
+        String url = "https://top.baidu.com/board?tab=realtime&sa=fyb_realtime_31065";
+        List<NewsModel> list = new ArrayList<>();
         try {
-            //set 转list
-            return new ArrayList<>(getHotNews(size));
-        } catch (Exception e) {
-            logger.error("抓取热点排行榜异常：", e);
-            return null;
+            Document doc = Jsoup.connect(url).get();
+            //标题
+            Elements titles = doc.select(".c-single-text-ellipsis");
+            //图片
+            Elements imgs = doc.select(".category-wrap_iQLoo .index_1Ew5p").next("img");
+            //内容
+            Elements contents = doc.select(".hot-desc_1m_jR.large_nSuFU");
+            //推荐图
+            Elements urls = doc.select(".category-wrap_iQLoo a.img-wrapper_29V76");
+            //热搜指数
+            Elements levels = doc.select(".hot-index_1Bl1a");
+            for (int i = 0; i < levels.size(); i++) {
+                NewsModel o = new NewsModel();
+                o.setTitle(titles.get(i).text().trim());
+                o.setImg(imgs.get(i).attr("src"));
+                o.setContent(contents.get(i).text().replaceAll("查看更多>", "").trim());
+                o.setUrl(urls.get(i).attr("href"));
+//                o.setLevel(levels.get(i).text().trim());
+                list.add(o);
+            }
+            return list;
+
+        } catch (IOException e) {
+            logger.error("抓取百度热点排行榜异常：" + e.getMessage());
         }
+        return null;
     }
 
-    //获取抖音热搜
+    /**
+     * 抓取微博热搜榜
+     */
+    public List<NewsModel> grabWeiBoHotNews() {
+        String url = "https://weibo.com/ajax/statuses/hot_band";
+        String s = HttpUtil.get(url);
+        WeiBoHot weiBoHot = JSON.parseObject(s, WeiBoHot.class);
+        List<NewsModel> list = new ArrayList<>();
+        for (WeiBoHot.WeiBo weiBo : weiBoHot.getData().getBand_list()) {
+            NewsModel o = new NewsModel();
+            o.setTitle(weiBo.getNote());
+            o.setImg(weiBo.getMblog());
+            o.setContent(weiBo.getWord());
+            o.setUrl(weiBo.getWord_scheme());
+            list.add(o);
+        }
+        return list;
+    }
+
     public List<NewsModel> getDouYinHotNews() {
         try {
-            Map<String, String> map = new HashMap<>();
-            map.put("authority", "");
-            //:authority: mcs.zijieapi.com
-            //:method: POST
-            //:path: /list
-            //:scheme: https
-            //accept: */*
-            //accept-encoding: gzip, deflate, br
-            //accept-language: zh-CN,zh;q=0.9
-            //content-length: 1783
 
-            String s = HttpUtils.get("https://www.iesdouyin.com/web/api/v2/hotsearch/billboard/word/?reflow_source=reflow_page");
+            String s = HttpUtils.get("https://www.iesdouyin.com/web/api/" +
+                    "v2/hotsearch/billboard/word/?reflow_source=reflow_page");
 
             List<NewsModel> list = new ArrayList<>();
             JSONArray jsonArray = JSON.parseObject(s).getJSONArray("word_list");
@@ -257,61 +312,7 @@ public class GetHotNewsServiceImpl {
         } catch (Exception e) {
             logger.error("", e);
         }
-        return null;
-    }
-
-
-    public String getDouYinHotNews2() {
-        try {
-            String s = getDouYinHots();
-            logger.info(s);
-            StringBuilder sb = new StringBuilder();
-            JSONArray jsonArray = JSON.parseObject(s).getJSONArray("word_list");
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                sb.append(jsonObject.getString("word")).append("。");
-            }
-            return sb.toString();
-        } catch (Exception e) {
-            logger.error("JSON解析失败", e);
-            return null;
-        }
-    }
-
-    public String getDouYinHotNews3() {
-        try {
-            String s = getDouYinHots();
-            logger.info(s);
-            StringBuilder sb = new StringBuilder();
-            JSONArray jsonArray = JSON.parseObject(s).getJSONArray("word_list");
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                sb.append(jsonObject.getString("word")).append("。");
-            }
-            return sb.toString();
-        } catch (Exception e) {
-            logger.error("JSON解析失败", e);
-            return null;
-        }
-    }
-
-    public String getDouYinHots() {
-        try {
-            Map<String, String> map = new HashMap<>();
-            map.put("authority", "douyin.com");
-            map.put("referer", "https://www.iesdouyin.com/");
-            map.put("path", "/web/api/v2/hotsearch/billboard/word/");
-            map.put("scheme", "https");
-            map.put("method", "GET");
-            map.put("accept", "*/*");
-//            map.put("accept-encoding", "gzip, deflate, br");
-//            map.put("accept-language", "zh-CN,zh;q=0.9");
-//            map.put("content-length", "1783");
-
-            return HttpUtils.getRandomUserAgent("https://www.iesdouyin.com/web/api/v2/hotsearch/billboard/word/?reflow_source=reflow_page", map);
-        } catch (Exception e) {
-            logger.error("获取抖音热搜失败", e);
-            return null;
-        }
+        //防止空指针
+        return new ArrayList<>();
     }
 }
